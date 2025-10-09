@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Busca</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0b0c10;
+            color: #c5c6c7;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #66fcf1;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 400px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        button {
+            background-color: #45a29e;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #66fcf1;
+            color: #0b0c10;
+        }
+
+        .results {
+            margin-top: 30px;
+        }
+
+        .category {
+            margin-top: 25px;
+            padding: 10px;
+            background-color: #1f2833;
+            border-radius: 10px;
+        }
+
+        .category h2 {
+            color: #45a29e;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li {
+            padding: 6px 0;
+            border-bottom: 1px solid #45a29e33;
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    {% include 'includes/navbar.html' %}
+
+    <h1>🔭 Explore o Universo</h1>
+
+    <form method="get" action="{% url 'search' %}">
+        <input type="text" name="q" value="{{ query }}" placeholder="Search for galaxies, stars, planets..." required>
+        <button type="submit">Search</button>
+    </form>
+
+    <div class="results">
+        {% if query %}
+            <h2>Results for "{{ query }}"</h2>
+
+            {% if galaxies or stars or planets %}
+                {% if galaxies %}
+                    <div class="category">
+                        <h2>🌌 Galáxias</h2>
+                        <ul>
+                            {% for galaxy in galaxies %}
+                                <li><strong>{{ galaxy.name }}</strong> — {{ galaxy.type }} ({{ galaxy.distance_mly }} milhões de anos luz de distância)</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if stars %}
+                    <div class="category">
+                        <h2>✨ Estrelas</h2>
+                        <ul>
+                            {% for star in stars %}
+                                <li><strong>{{ star.name }}</strong> — {{ star.star_type }}, magnitude {{ star.magnitude }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                {% if planets %}
+                    <div class="category">
+                        <h2>🪐 Planetas</h2>
+                        <ul>
+                            {% for planet in planets %}
+                                <li><strong>{{ planet.name }}</strong> — Período de Órbita: {{ planet.orbit_period }} anos {% if planet.has_life %}🌱{% endif %}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {% else %}
+                <p>Nenhum resultado encontrado.</p>
+            {% endif %}
+        {% else %}
+            <p>Escreva acima para pesquisar algum corpo celeste.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

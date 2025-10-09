@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - ViCosmus</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0b0c10;
+            color: #c5c6c7;
+            text-align: center;
+            margin-top: 100px;
+        }
+        form {
+            display: inline-block;
+            background-color: #1f2833;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        input {
+            margin: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+        button {
+            background-color: #45a29e;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        a { color: #66fcf1; }
+    </style>
+</head>
+<body>
+    {% include 'includes/navbar.html' %}
+    <h1>🔭 ViCosmus Login</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+    </form>
+    <p>Não possui uma conta?<a href="{% url 'register' %}">Cadastro.</a>.</p>
+</body>
+</html>
