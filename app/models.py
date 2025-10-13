@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 class CustomUser(AbstractUser):
     TYPE_CHOICES = [
@@ -60,7 +62,9 @@ class Galaxy(CelestialBody):
     image = models.ImageField(upload_to='galaxyImages/', null=True, blank=True, verbose_name="Galaxy's image")
 
 class Star(CelestialBody):
-    galaxy = models.ForeignKey(Galaxy, on_delete=models.CASCADE, related_name='stars')
+    Content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    galaxy = GenericForeignKey('Content_type', 'object_id')
     starType = models.CharField(max_length=255, verbose_name="Star's type", choices=[('main_sequence', 'Main Sequence'), ('giant', 'Giant'), ('dwarf', 'Dwarf'), ('supergiant', 'Supergiant')])
     temperature = models.FloatField(null=True, blank=True, verbose_name="Star's surface temperature")
     luminosity = models.FloatField(null=True, blank=True, verbose_name="Star's luminosity")
