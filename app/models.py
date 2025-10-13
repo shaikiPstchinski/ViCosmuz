@@ -1,22 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-class User(AbstractUser):
+class CustomUser(AbstractUser):
     role = models.CharField(max_length=60, choices=[('user', 'User'), ('astronomer', 'Astronomer'), ('admin', 'Administrator')], verbose_name="User's role", default='user')
     email = models.EmailField(unique=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
-    groups = models.ManyToManyField('auth.Group', blank=True, help_text="User's group", related_name="userGroup", related_query_name='user', verbose_name='groups')
-
-    user_permissions = models.ManyToManyField('auth.Permission', blank=True, related_name="userGroup", verbose_name="user's permissions")
-
     def __str__(self):
         return self.email
     
     class Meta:
-        db_table = 'custom_user'
+        db_table = 'custom_user'  
 
 class CelestialBody(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name="Celestial body's name")

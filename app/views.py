@@ -19,7 +19,7 @@ def search(request):
     return render(request, 'search.html', context)
 
 def home(request):
-    return render(request, 'home.html')
+    return render(request, 'app/templates/home.html')
 
 def register(request):
     if request.method == 'POST':
