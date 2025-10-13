@@ -1,5 +1,9 @@
 from django.contrib import admin
-from .models import Galaxy, Star, Planet
+from .models import CustomUser, Galaxy, Star, Planet
+
+@admin.register(CustomUser)
+class CustomUserAdmin(admin.ModelAdmin):
+    pass
 
 @admin.register(Galaxy)
 class GalaxyAdmin(admin.ModelAdmin):

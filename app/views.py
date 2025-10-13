@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout
-from django.contrib.auth.forms import UserCreationForm
+from .forms import CustomUserCreationForm
 from django.contrib.auth.models import Group
 from django.contrib import messages
 from .models import Galaxy, Star, Planet
@@ -19,11 +19,11 @@ def search(request):
     return render(request, 'search.html', context)
 
 def home(request):
-    return render(request, 'app/templates/home.html')
+    return render(request, 'home.html')
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
 
@@ -34,7 +34,7 @@ def register(request):
             return redirect('login')
         
     else: 
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
 
     return render(request, 'register.html', {'form':form})
 
