@@ -8,7 +8,7 @@ class CustomUser(AbstractUser):
         ('admin', 'Administrator'),
     ]
 
-    type = models.CharField(max_length=60, choices=TYPE_CHOICES, verbose_name="User's role", default='user')
+    type = models.CharField(max_length=60, choices=TYPE_CHOICES, verbose_name="User's role", default='user', null=True, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True, verbose_name="Profile picture")
     bio = models.TextField(blank=True, verbose_name="User's biography")
     email = models.EmailField(unique=True)
@@ -50,24 +50,27 @@ class CelestialBody(models.Model):
         return self.name
 
     class Meta:
-        verbose_plural_name = "Celestial Bodies"
+        verbose_name_plural = "Celestial Bodies"
         ordering = ['-discoveryDate']
         abstract = True
 
 class Galaxy(CelestialBody):
     type = models.CharField(max_length=255, verbose_name="Galaxy's type", choices=[('spiral', 'Spiral'), ('elliptical', 'Elliptical'), ('irregular', 'Irregular')])
     distanceMly = models.FloatField(verbose_name='Distance in millions light-years')
+    image = models.ImageField(upload_to='galaxyImages/', null=True, blank=True, verbose_name="Galaxy's image")
 
 class Star(CelestialBody):
     galaxy = models.ForeignKey(Galaxy, on_delete=models.CASCADE, related_name='stars')
     starType = models.CharField(max_length=255, verbose_name="Star's type", choices=[('main_sequence', 'Main Sequence'), ('giant', 'Giant'), ('dwarf', 'Dwarf'), ('supergiant', 'Supergiant')])
     temperature = models.FloatField(null=True, blank=True, verbose_name="Star's surface temperature")
     luminosity = models.FloatField(null=True, blank=True, verbose_name="Star's luminosity")
+    image = models.ImageField(upload_to='starImages/', null=True, blank=True, verbose_name="Star's image")
     
 class Planet(CelestialBody):
     name = models.CharField(max_length=255, unique=True, verbose_name="Planet's name")
-    star = models.ForeignKey(Star, on_delete=models.CASCADE, related_name="Planets")
+    star = models.ForeignKey(Star, on_delete=models.CASCADE, related_name="planets")
     habitable = models.BooleanField(default=False, verbose_name="Planet has habitable conditions")
     orbitPeriod = models.FloatField(null=True, blank=True, verbose_name="Orbital period in Earth years")
+    image = models.ImageField(upload_to='planetImages/', null=True, blank=True, verbose_name="Planet's image")
 
 

@@ -1,11 +1,11 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser, CelestialBody
+from .models import CustomUser, CelestialBody, Galaxy, Star, Planet
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'password1', 'password2', 'type')
+        fields = '__all__'
 
 class CelestialBodyForm(forms.ModelForm):
     class Meta:
@@ -20,4 +20,19 @@ class CelestialBodyForm(forms.ModelForm):
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'profile_picture', 'bio', 'type')
+        fields = '__all__'
+
+class GalaxyForm(forms.ModelForm):
+    class Meta:
+        model = Galaxy
+        fields = '__all__'
+
+class StarForm(forms.ModelForm):
+    class Meta:
+        model = Star
+        fields = '__all__'
+
+class PlanetForm(forms.ModelForm):
+    class Meta:
+        model = Planet
+        fields = '__all__'

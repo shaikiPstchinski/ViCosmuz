@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>Universe Explorer</title>
+</head>
+<body>
+    {% include 'includes/navbar.html' %}
+    <h1>{{ galaxy.name }}</h1>
+    <p>Type: {{ galaxy.galaxy_type }}</p>
+    <p>Distance: {{ galaxy.distance_from_earth }} light-years</p>
+
+    <h2>Stars in this galaxy:</h2>
+    <ul>
+        {% for star in stars %}
+            <li><a href="{% url 'star_detail' star.id %}">{{ star.name }}</a></li>
+        {% empty %}
+            <li>No stars yet.</li>
+        {% endfor %}
+</ul>
+</body>
+</html>
