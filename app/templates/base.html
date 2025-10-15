@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Universe Explorer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0d1117;
+            color: #e6edf3;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #161b22;
+            padding: 1rem;
+            border-bottom: 1px solid #30363d;
+        }
+        header a {
+            color: #58a6ff;
+            text-decoration: none;
+            margin-right: 1rem;
+        }
+        main {
+            padding: 2rem;
+        }
+        a {
+            color: #58a6ff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        ul { list-style: none; padding-left: 0; }
+        li { margin: 0.3rem 0; }
+        .card {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .image {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 8px;
+        }
+        footer {
+            border-top: 1px solid #30363d;
+            text-align: center;
+            padding: 1rem;
+            color: #8b949e;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="{% url 'index' %}">🏠 Home</a>
+        <a href="{% url 'create_galaxy' %}">➕ Adicionar Galáxia</a>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>🌌 Cosmuz — A Database Espacial de Muzambinho.</p>
+    </footer>
+</body>
+</html>

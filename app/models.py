@@ -74,7 +74,7 @@ class Planet(CelestialBody):
     name = models.CharField(max_length=255, unique=True, verbose_name="Planet's name")
     star = models.ForeignKey(Star, on_delete=models.CASCADE, related_name="planets")
     habitable = models.BooleanField(default=False, verbose_name="Planet has habitable conditions")
-    orbitPeriod = models.FloatField(null=True, blank=True, verbose_name="Orbital period in Earth years")
+    orbitPeriod = models.FloatField(null=True, blank=True, verbose_name="Orbital period in earth years")
     image = models.ImageField(upload_to='planetImages/', null=True, blank=True, verbose_name="Planet's image")
 
 

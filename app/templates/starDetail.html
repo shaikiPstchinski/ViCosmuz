@@ -1,0 +1,20 @@
+{% extends "app/base.html" %}
+{% block content %}
+<h1>{{ star.name }}</h1>
+<p><strong>Tipo:</strong> {{ star.star_type }}</p>
+<p><strong>Massa:</strong> {{ star.mass }} solar masses</p>
+<p><strong>Galáxia:</strong> <a href="{% url 'galaxy_detail' star.galaxy.id %}">{{ star.galaxy.name }}</a></p>
+
+{% if star.image %}
+    <img class="image" src="{{ star.image.url }}" alt="{{ star.name }}">
+{% endif %}
+
+<h2>Planetas em órbita {{ star.name }}</h2>
+<ul>
+    {% for planet in planets %}
+        <li><a href="{% url 'planet_detail' planet.id %}">{{ planet.name }}</a></li>
+    {% empty %}
+        <li>Nenhum planeta orbitando essa estrela registrado.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

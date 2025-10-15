@@ -1,3 +1,18 @@
-{% include 'includes/navbar.html' %}
-<h1>Welcome to the Universe Explorer</h1>
-<p>Explore galaxies, stars, and planets.</p>
+{% extends "app/base.html" %}
+{% block content %}
+<h1>🌠 Bem-vindo ao Cosmuz.</h1>
+
+<h2>Galaxies</h2>
+{% for galaxy in galaxies %}
+<div class="card">
+    <h3><a href="{% url 'galaxy_detail' galaxy.id %}">{{ galaxy.name }}</a></h3>
+    <p>Tipo: {{ galaxy.type }}</p>
+    <p>Distância: {{ galaxy.distanceMly }} anos-luz</p>
+    {% if galaxy.image %}
+        <img class="image" src="{{ galaxy.image.url }}" alt="{{ galaxy.name }}">
+    {% endif %}
+</div>
+{% empty %}
+<p>Nenhuma galáxia registrada. <a href="{% url 'create_galaxy' %}">Adicionar.</a></p>
+{% endfor %}
+{% endblock %}

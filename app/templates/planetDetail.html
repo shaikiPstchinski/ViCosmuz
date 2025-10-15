@@ -1,0 +1,13 @@
+{% extends "app/base.html" %}
+{% block content %}
+<h1>{{ planet.name }}</h1>
+<p><strong>Raio:</strong> {{ planet.radius }} km</p>
+<p><strong>Estrela:</strong> <a href="{% url 'star_detail' planet.star.id %}">{{ planet.star.name }}</a></p>
+<p><strong>Galáxia:</strong> <a href="{% url 'galaxy_detail' planet.star.galaxy.id %}">{{ planet.star.galaxy.name }}</a></p>
+<p><strong>Habitável:</strong> {{ planet.habitable|yesno:"Yes,No" }}</p>
+<p><strong>Período de órbita:</strong> <a href="{% url ''}"></a></p>
+
+{% if planet.image %}
+    <img class="image" src="{{ planet.image.url }}" alt="{{ planet.name }}">
+{% endif %}
+{% endblock %}

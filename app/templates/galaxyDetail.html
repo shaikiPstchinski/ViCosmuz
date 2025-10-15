@@ -1,21 +1,19 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <title>Universe Explorer</title>
-</head>
-<body>
-    {% include 'includes/navbar.html' %}
-    <h1>{{ galaxy.name }}</h1>
-    <p>Type: {{ galaxy.galaxy_type }}</p>
-    <p>Distance: {{ galaxy.distance_from_earth }} light-years</p>
+{% extends "app/base.html" %}
+{% block content %}
+<h1>{{ galaxy.name }}</h1>
+<p><strong>Tipo:</strong> {{ galaxy.galaxy_type }}</p>
+<p><strong>Distância:</strong> {{ galaxy.distanceMly }} anos-luz</p>
 
-    <h2>Stars in this galaxy:</h2>
-    <ul>
-        {% for star in stars %}
-            <li><a href="{% url 'star_detail' star.id %}">{{ star.name }}</a></li>
-        {% empty %}
-            <li>No stars yet.</li>
-        {% endfor %}
+{% if galaxy.image %}
+    <img class="image" src="{{ galaxy.image.url }}" alt="{{ galaxy.name }}">
+{% endif %}
+
+<h2>Estrelas nessa Galáxia.</h2>
+<ul>
+    {% for star in stars %}
+        <li><a href="{% url 'star_detail' star.id %}">{{ star.name }}</a></li>
+    {% empty %}
+        <li>Sem estrelas registradas.</li>
+    {% endfor %}
 </ul>
-</body>
-</html>
+{% endblock %}
