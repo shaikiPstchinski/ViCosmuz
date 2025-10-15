@@ -55,14 +55,16 @@
 </head>
 <body>
     <header>
-        <a href="{% url 'index' %}">🏠 Home</a>
-        <a href="{% url 'create_galaxy' %}">➕ Adicionar Galáxia</a>
+        <a href="{% url 'home' %}">🏠 Home</a>
+        <a href="{% url 'celestialBodyCreation' %}">➕ Add Celestial Body</a>
+
     </header>
     <main>
-        {% block content %}{% endblock %}
+        {% block content %}
     </main>
     <footer>
-        <p>🌌 Cosmuz — A Database Espacial de Muzambinho.</p>
+        <p>🌌 ViCosmuz — A Database Espacial de Muzambinho.</p>
     </footer>
 </body>
 </html>
+{% endblock %}

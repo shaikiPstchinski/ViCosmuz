@@ -38,7 +38,7 @@ class CelestialBody(models.Model):
         ('other', 'Other'),
     ]
     name = models.CharField(max_length=255, unique=True, verbose_name="Celestial body's name")
-    type = models.CharField(max_length=50, choices=TYPES, verbose_name="Celestial body's type")
+    type = models.CharField(max_length=255, choices=TYPES, verbose_name="Celestial body's type")
     mass = models.DecimalField(max_digits=18, decimal_places=6, verbose_name="Body's mass", null=True, blank=True)
     radius = models.DecimalField(max_digits=18, decimal_places=6, verbose_name="Body's radius", null=True, blank=True)
     description = models.TextField(verbose_name="Celestial body's description", blank=True)

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+
+<div class="container mt-5">
+  <h2>{{ title }}</h2>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <div class="form-group mb-3">
+      <label for="objectType">Tipo de corpo celeste</label>
+      <select id="objectType" name="objectType" class="form-control">
+        <option value="">Selecione...</option>
+        <option value="galaxy">Galáxia</option>
+        <option value="star">Estrela</option>
+        <option value="planet">Planeta</option>
+      </select>
+    </div>
+
+    <div id="galaxy-form" class="body-form" style="display:none;">
+      {{ galaxy_form.as_p }}
+    </div>
+
+    <div id="star-form" class="body-form" style="display:none;">
+      {{ star_form.as_p }}
+    </div>
+
+    <div id="planet-form" class="body-form" style="display:none;">
+      {{ planet_form.as_p }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">Salvar</button>
+  </form>
+</div>
+
+<script>
+  const select = document.getElementById('objectType');
+  const forms = document.querySelectorAll('.body-form');
+
+  select.addEventListener('change', function() {
+    forms.forEach(f => f.style.display = 'none'); 
+    if (this.value) {
+      document.getElementById(this.value + '-form').style.display = 'block';
+    }
+  });
+</script>
+{% endblock %}

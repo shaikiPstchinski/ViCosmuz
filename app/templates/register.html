@@ -1,3 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -35,7 +38,6 @@
     </style>
 </head>
 <body>
-    {% include 'includes/navbar.html' %}
     <h1>🪐 Crie sua conta ViCosmus.</h1>
     <form method="post" class="form-register">
         {% csrf_token %}
@@ -79,3 +81,5 @@
     <p>Já possui uma conta? <a href="{% url 'login' %}">Login</a>.</p>
 </body>
 </html>
+
+{% endblock %}
