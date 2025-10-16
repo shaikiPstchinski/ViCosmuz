@@ -80,6 +80,7 @@ class CelestialBodyTypeForm(forms.Form):
 def celestialBodyCreation(request):
     if request.method == 'POST':
         form = CelestialBodyTypeForm(request.POST)
+
         if form.is_valid():
             form.save()
             return redirect('sucessUrl')

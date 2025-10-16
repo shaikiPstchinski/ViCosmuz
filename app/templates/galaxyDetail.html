@@ -11,7 +11,7 @@
 <h2>Estrelas nessa Galáxia.</h2>
 <ul>
     {% for star in stars %}
-        <li><a href="{% url 'star_detail' star.id %}">{{ star.name }}</a></li>
+        <li><a href="{% url 'starDetail' star.id %}">{{ star.name }}</a></li>
     {% empty %}
         <li>Sem estrelas registradas.</li>
     {% endfor %}

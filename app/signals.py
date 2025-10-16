@@ -4,18 +4,22 @@ from django.dispatch import receiver
 from django.apps import apps
 
 def createUserRoles(sender, **kwargs):
-    if sender.name == 'ViCosmus':
-        user_group, _ =  Group.objects.get_or_create(name='User')
-        astronomer_group, _ = Group.objects.get_or_create(name='Astronomer')
-        administrator_group, _ = Group.objects.get_or_create(name='Administrator')
+    if sender.name == 'ViCosmuz':
+        userGroup, _ =  Group.objects.get_or_create(name='User')
+        astronomerGroup, _ = Group.objects.get_or_create(name='Astronomer')
+        administratorGroup, _ = Group.objects.get_or_create(name='Administrator')
 
-        galaxy_permissions = Permission.objects.filter(content_type__app_label='ViCosmus', content_type__model='galaxy')
-        star_permissions = Permission.objects.filter(content_type__app_label='ViCosmus', content_type__model='star')
-        planet_permissions = Permission.objects.filter(content_type__app_label='ViCosmus', content_type__model='planet')
+        galaxyPermissions = Permission.objects.filter(content_type__app_label='ViCosmuz', content_type__model='galaxy')
+        starPermissions = Permission.objects.filter(content_type__app_label='ViCosmuz', content_type__model='star')
+        planetPermissions = Permission.objects.filter(content_type__app_label='ViCosmuz', content_type__model='planet')
 
-        for permission in list(galaxy_permissions) + list(star_permissions) + list(planet_permissions):
-            if permission.startswith('add_', 'change_ ', 'delete_ '):
-                astronomer_group.permissions.add(permission)
+        for permission in list(galaxyPermissions) + list(starPermissions) + list(planetPermissions):
+            if permission.codename.startswith('add_', 'change_ ', 'delete_ ', 'view_'):
+                astronomerGroup.permissions.add(permission)
+
+        for permission in list(galaxyPermissions) + list(starPermissions) + list(planetPermissions):
+            if permission.objects.filter(codename__startswith='view_'):
+                userGroup.permissions.add(permission)
 
         for permission in Permission.objects.all():
-            administrator_group.permissions.add(permission)
+            administratorGroup.permissions.add(permission)

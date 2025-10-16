@@ -18,30 +18,36 @@
       </select>
     </div>
 
-    <div id="galaxy-form" class="body-form" style="display:none;">
+    <div id="galaxyForm" class="bodyForm" style="display:none;">
       {{ galaxy_form.as_p }}
     </div>
 
-    <div id="star-form" class="body-form" style="display:none;">
+    <div id="starForm" class="bodyForm" style="display:none;">
       {{ star_form.as_p }}
     </div>
 
-    <div id="planet-form" class="body-form" style="display:none;">
+    <div id="planetForm" class="bodyForm" style="display:none;">
       {{ planet_form.as_p }}
     </div>
 
     <button type="submit" class="btn btn-primary">Salvar</button>
   </form>
+
+  {{ form.non_field_errors }}
+  {% for field in form %}
+    {{ field.label_tag }} {{ field }}
+    {{ field.errors }}
+  {% endfor %}
 </div>
 
 <script>
   const select = document.getElementById('objectType');
-  const forms = document.querySelectorAll('.body-form');
+  const forms = document.querySelectorAll('.bodyForm');
 
   select.addEventListener('change', function() {
     forms.forEach(f => f.style.display = 'none'); 
     if (this.value) {
-      document.getElementById(this.value + '-form').style.display = 'block';
+      document.getElementById(this.value + 'Form').style.display = 'block';
     }
   });
 </script>

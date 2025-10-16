@@ -10,7 +10,7 @@ urlpatterns = [
     path('celestialBodyCreation/', views.celestialBodyCreation, name='celestialBodyCreation'),
     path('star/<int:star_id>/', views.starDetail, name='starDetail'),
     path('planet/<int:planet_id>/', views.planetDetail, name='planetDetail'),
-    path('create/', views.celestialBodyCreation, name='createCelesrtialBody'),
+    path('create/', views.celestialBodyCreation, name='createCelestialBody'),
     path('', include('ViCosmuz.urls')),
     path('api/', include('app.urls_api')),
 ]

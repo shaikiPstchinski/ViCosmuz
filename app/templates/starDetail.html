@@ -1,9 +1,9 @@
 {% extends "app/base.html" %}
 {% block content %}
 <h1>{{ star.name }}</h1>
-<p><strong>Tipo:</strong> {{ star.star_type }}</p>
-<p><strong>Massa:</strong> {{ star.mass }} solar masses</p>
-<p><strong>Galáxia:</strong> <a href="{% url 'galaxy_detail' star.galaxy.id %}">{{ star.galaxy.name }}</a></p>
+<p><strong>Tipo:</strong> {{ star.type }}</p>
+<p><strong>Massa:</strong> {{ star.mass }} massas solares</p>
+<p><strong>Galáxia:</strong> <a href="{% url 'galaxyDetail' star.galaxy.id %}">{{ star.galaxy.name }}</a></p>
 
 {% if star.image %}
     <img class="image" src="{{ star.image.url }}" alt="{{ star.name }}">
@@ -12,7 +12,7 @@
 <h2>Planetas em órbita {{ star.name }}</h2>
 <ul>
     {% for planet in planets %}
-        <li><a href="{% url 'planet_detail' planet.id %}">{{ planet.name }}</a></li>
+        <li><a href="{% url 'planetDetail' planet.id %}">{{ planet.name }}</a></li>
     {% empty %}
         <li>Nenhum planeta orbitando essa estrela registrado.</li>
     {% endfor %}
