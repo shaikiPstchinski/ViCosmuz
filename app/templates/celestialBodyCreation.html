@@ -1,54 +1,121 @@
 {% extends "base.html" %}
-{% block content %}
 {% load static %}
 
-<div class="container mt-5">
-  <h2>{{ title }}</h2>
+{% block content %}
+<div class="container py-5">
+  <div class="card card-space p-5 shadow-lg mx-auto fadeIn" style="max-width: 800px;">
+    <h2 id="pageTitle" class="text-center mb-4 fw-bold">{{ title }}</h2>
 
-  <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
+    <form method="POST" enctype="multipart/form-data" id="celestialBodyForm">
+      {% csrf_token %}
 
-    <div class="form-group mb-3">
-      <label for="objectType">Tipo de corpo celeste</label>
-      <select id="objectType" name="objectType" class="form-control">
-        <option value="">Selecione...</option>
-        <option value="galaxy">Galáxia</option>
-        <option value="star">Estrela</option>
-        <option value="planet">Planeta</option>
-      </select>
-    </div>
+      <div class="form-group mb-4 text-center">
+        <label for="objectType" class="form-label fw-semibold d-block mb-3 fs-5">🌠 Escolha o tipo de corpo celeste</label>
+        <select id="objectType" name="objectType" class="form-select mx-auto w-50 text-center">
+          <option value="">Selecione...</option>
+          <option value="galaxy" {% if selectedType == 'galaxy' %}selected{% endif %}>🌌 Galáxia</option>
+          <option value="star" {% if selectedType == 'star' %}selected{% endif %}>⭐ Estrela</option>
+          <option value="planet" {% if selectedType == 'planet' %}selected{% endif %}>🪐 Planeta</option>
+        </select>
+      </div>
 
-    <div id="galaxyForm" class="bodyForm" style="display:none;">
-      {{ galaxy_form.as_p }}
-    </div>
+      <div id="galaxyForm" class="bodyForm mt-4" style="display:none;">
+        <h4 class="text-info mb-3">Dados da Galáxia</h4>
+        {{ galaxyForm.as_p }}
+        <div class="text-end mt-3">
+          <button type="submit" class="btn btn-success px-4">Registrar Galáxia</button>
+        </div>
+      </div>
 
-    <div id="starForm" class="bodyForm" style="display:none;">
-      {{ star_form.as_p }}
-    </div>
+      <div id="starForm" class="bodyForm mt-4" style="display:none;">
+        <h4 class="text-dark">Dados da Estrela</h4>
+        {{ starForm.as_p }}
+        <div class="text-end mt-3">
+          <button type="submit" class="btn btn-warning px-4">Registrar Estrela</button>
+        </div>
+      </div>
 
-    <div id="planetForm" class="bodyForm" style="display:none;">
-      {{ planet_form.as_p }}
-    </div>
-
-    <button type="submit" class="btn btn-primary">Salvar</button>
-  </form>
-
-  {{ form.non_field_errors }}
-  {% for field in form %}
-    {{ field.label_tag }} {{ field }}
-    {{ field.errors }}
-  {% endfor %}
+      <div id="planetForm" class="bodyForm mt-4" style="display:none;">
+        <h4 class="text-primary mb-3">Dados do Planeta</h4>
+        {{ planetForm.as_p }}
+        <div class="text-end mt-3">
+          <button type="submit" class="btn btn-primary px-4">Registrar Planeta</button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>
+{% endblock %}
 
+{% block scripts %}
 <script>
-  const select = document.getElementById('objectType');
-  const forms = document.querySelectorAll('.bodyForm');
+  document.addEventListener("DOMContentLoaded", function() {
+    const select = document.getElementById("objectType");
+    const forms = document.querySelectorAll(".bodyForm");
+    const titleEl = document.getElementById("pageTitle");
+    const card = document.querySelector(".card-space");
 
-  select.addEventListener('change', function() {
-    forms.forEach(f => f.style.display = 'none'); 
-    if (this.value) {
-      document.getElementById(this.value + 'Form').style.display = 'block';
+    const themes = {
+      galaxy: {
+        title: "Criar Galáxia",
+        color: "text-info",
+        bg: "radial-gradient(circle at top left, #141E30, #243B55)",
+        textColor: "#fff"
+      },
+      star: {
+        title: "Criar Estrela",
+        color: "text-dark",
+        bg: "radial-gradient(circle at top right, #ffb347, #ffcc33)",
+        textColor: "#000"
+      },
+      planet: {
+        title: "Criar Planeta",
+        color: "text-light",
+        bg: "linear-gradient(120deg, #2193b0, #6dd5ed)",
+        textColor: "#fff"
+      },
+    };
+
+    function updateUI() {
+      forms.forEach(f => {
+        f.style.display = "none";
+        f.classList.remove("fadeIn");
+      });
+
+      const val = select.value;
+      const defaultBg = "radial-gradient(circle at 20% 20%, #0a0f24, #000)";
+      const defaultTextColor = "#f8f9fa";
+
+      document.body.style.background = defaultBg;
+      document.body.style.color = defaultTextColor;
+      card.style.color = defaultTextColor;
+      card.style.background = "rgba(255,255,255,0.07)";
+
+      titleEl.textContent = "Criar Corpo Celeste";
+      titleEl.className = "text-center mb-4 fw-bold text-light";
+
+      if (val && themes[val]) {
+        const { title, color, bg, textColor } = themes[val];
+        titleEl.textContent = title;
+        titleEl.className = "text-center mb-4 fw-bold " + color;
+        document.body.style.background = bg;
+        document.body.style.color = textColor;
+        card.style.color = textColor;
+
+        if (val === "star") card.style.background = "rgba(255,255,200,0.15)";
+        if (val === "planet") card.style.background = "rgba(200,255,255,0.1)";
+        if (val === "galaxy") card.style.background = "rgba(100,150,255,0.08)";
+
+        const form = document.getElementById(val + "Form");
+        if (form) {
+          form.style.display = "block";
+          form.classList.add("fadeIn");
+        }
+      }
     }
+
+    updateUI();
+    select.addEventListener("change", updateUI);
   });
 </script>
 {% endblock %}

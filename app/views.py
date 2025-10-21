@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group
 from django.contrib import messages
 from .models import Galaxy, Star, Planet
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .decorators import astronomer_required
+from .decorators import astronomerRequired
 
 def isAstronomer(user):
     return user.groups.authenticated and user.user_type == 'astronomer'
@@ -44,9 +44,10 @@ def search(request):
             if name:
                 galaxies = galaxies.filter(name__icontains=name)
             
-            galaxy_type = request.GET.get('galaxy_type', '')
-            if type:
+            galaxyType = request.GET.get('type', '')
+            if objectType:
                 galaxies = galaxies.filter(type=galaxy_type)
+
             
             distanceMly = request.GET.get('distance_mly', '')
             if distanceMly:
@@ -55,14 +56,14 @@ def search(request):
                 except ValueError:
                     pass
         
-        elif selected_type == 'star':
+        elif selectedType == 'star':
             stars = Star.objects.all()
             
             name = request.GET.get('name', '')
             if name:
                 stars = stars.filter(name__icontains=name)
             
-            starType = request.GET.get('starType', '')
+            starType = request.GET.get('type', '')
             if starType:
                 stars = stars.filter(type=starType)
             
@@ -141,51 +142,67 @@ def planetDetail(request, planet_id):
 
     return render(request, 'planetDetail.html', {'planet': planet})
 
-#@login_required
-#@user_passes_test(isAstronomer)
+@astronomerRequired
 def celestialBodyCreation(request):
     title = "Criar Corpo Celeste"
-    selectedType = request.POST.get('type') or request.GET.get('type')
-    form = None
+    selectedType = None
+
+    galaxyForm = GalaxyForm()
+    starForm = StarForm()
+    planetForm = PlanetForm()
 
     if request.method == 'POST':
         selectedType = request.POST.get('objectType')
-
-        if selectedType == 'galaxy':
-            form = GalaxyForm(request.POST, request.FILES)
+        if selectedType == "galaxy":
             title = "Criar Galáxia"
-        elif selectedType == 'star':
-            form = StarForm(request.POST, request.FILES)
-            title = "Criar Estrela"
-        elif selectedType == 'planet':
-            form = PlanetForm(request.POST, request.FILES)
-            title = "Criar Planeta"
-        else: form = None
+            galaxyForm = GalaxyForm(request.POST, request.FILES)
 
-        if form and form.is_valid():
-            celestialBody = form.save(commit=False)
-            celestialBody.discoveredBy = request.user.username
-            celestialBody.save()
-            messages.success(request, f'Corpo celeste criado com sucesso: {celestialBody.name}.')
-            return redirect('home')
+            if galaxyForm.is_valid():
+                galaxy = galaxyForm.save(commit=False)
+                galaxy.discoveredBy = request.user.username
+                galaxy.save()
+                messages.success(request, f'Galáxia criada com sucesso: {galaxy.name}.')
+                return redirect('home')
+
+        elif selectedType == "star":
+            title = "Criar Estrela"
+            starForm = StarForm(request.POST, request.FILES)
+
+            if starForm.is_valid():
+                star = starForm.save(commit=False)
+                star.discoveredBy = request.user.username
+                star.save()
+                messages.success(request, f'Estrela criada com sucesso: {star.name}.')
+                return redirect('home')
+
+        elif selectedType == "planet":
+            title = "Criar Planeta"
+            planetForm = PlanetForm(request.POST, request.FILES)
+
+            if planetForm.is_valid():
+                planet = planetForm.save(commit=False)
+                planet.discoveredBy = request.user.username
+                planet.save()
+                messages.success(request, f'Planeta criado com sucesso: {planet.name}.')
+                return redirect('home')
         else:
-            context = {'form': form, 'title': title, 'selectedType': selectedType}
-            return render(request, 'celestialBodyCreation.html', context)
+            form = None
+            messages.error(request, "Tipo de corpo celeste inválido.")
 
-    else:
-        if not selectedType:
-            form = CelestialBodyTypeForm()
-        if selectedType == 'galaxy':
-            form = GalaxyForm()
-            title = "Criar Galáxia"
-        elif selectedType == 'star':
-            form = StarForm()
-            title = "Criar Estrela"
-        elif selectedType == 'planet':
-            form = PlanetForm()
-            title = "Criar Planeta"
-        else: 
-            form = CelestialBodyTypeForm()
-        
-        context = {'form': form, 'title': title, 'selectedType': selectedType}
-        return render(request, 'celestialBodyCreation.html', context)
+    print("I'm here")
+    print("Request method:", request.method)
+    print("POST content:", request.POST)
+    print("Selected type:", selectedType)
+    print("Galaxy form valid?", galaxyForm.is_valid())
+    print("Star form valid?", starForm.is_valid())
+    print("Planet form valid?", planetForm.is_valid())
+
+    context = {
+        'title': title,
+        'selectedType': selectedType,
+        'galaxyForm': galaxyForm,
+        'starForm': starForm,
+        'planetForm': planetForm,
+        }
+
+    return render(request, 'celestialBodyCreation.html', context)

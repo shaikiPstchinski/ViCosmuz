@@ -56,6 +56,7 @@ class StarForm(forms.ModelForm):
     class Meta:
         model = Star
         fields = '__all__'
+        exclude = ['content_type', 'object_id']
 
 class PlanetForm(forms.ModelForm):
     class Meta:
@@ -76,15 +77,3 @@ class CelestialBodyTypeForm(forms.Form):
         ('other', 'Other'),
     ]
     objectType = forms.ChoiceField(choices=TYPES, label='Celestial Body Type')
-
-def celestialBodyCreation(request):
-    if request.method == 'POST':
-        form = CelestialBodyTypeForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-            return redirect('sucessUrl')
-        else:
-            form = CelestialBodyTypeForm()
-
-    return render(request, 'celestialBodyCreation.html', {'form': form})

@@ -7,19 +7,24 @@ class CustomUser(AbstractUser):
     TYPE_CHOICES = [
         ('user', 'User'),
         ('astronomer', 'Astronomer'),
-        ('admin', 'Administrator'),
     ]
 
     type = models.CharField(max_length=60, choices=TYPE_CHOICES, verbose_name="User's type", default='user', null=True, blank=True)
-    profile_picture = models.ImageField(upload_to='profilePics/', null=True, blank=True, verbose_name="Profile picture")
+    profilePicture = models.ImageField(upload_to='profilePics/', null=True, blank=True, verbose_name="Profile picture")
     bio = models.TextField(blank=True, verbose_name="User's biography")
     email = models.EmailField(unique=True)
+    verified = models.BooleanField(default=False, verbose_name="Astronomer verification status")
+
+    def verified_status(self, obj):
+        return "✅" if obj.verified else "❌"
+    
+    verified_status.admin_order_field = "verified"
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
     def __str__(self):
-        return f'{self.username} {self.email}'
+        return f'{self.username} {self.type}'
     
     class Meta:
         db_table = 'customUser'  
@@ -63,17 +68,15 @@ class Galaxy(CelestialBody):
     image = models.ImageField(upload_to='galaxyImages/', null=True, blank=True, verbose_name="Galaxy's image")
 
 class Star(CelestialBody):
-    name = models.CharField(max_length=255, unique=True, verbose_name="Star's name")
-    contentType = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    objectId = models.PositiveIntegerField()
-    galaxy = GenericForeignKey('contentType', 'objectId')
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    galaxy = GenericForeignKey('content_type', 'object_id')
     type = models.CharField(max_length=255, verbose_name="Star's type", choices=[('main_sequence', 'Main Sequence'), ('giant', 'Giant'), ('dwarf', 'Dwarf'), ('supergiant', 'Supergiant')])
     temperature = models.FloatField(null=True, blank=True, verbose_name="Star's surface temperature")
     luminosity = models.FloatField(null=True, blank=True, verbose_name="Star's luminosity")
     image = models.ImageField(upload_to='starImages/', null=True, blank=True, verbose_name="Star's image")
     
 class Planet(CelestialBody):
-    name = models.CharField(max_length=255, unique=True, verbose_name="Planet's name")
     star = models.ForeignKey(Star, on_delete=models.CASCADE, related_name="planets")
     habitable = models.BooleanField(default=False, verbose_name="Planet has habitable conditions")
     orbitPeriod = models.FloatField(null=True, blank=True, verbose_name="Orbital period in earth years")

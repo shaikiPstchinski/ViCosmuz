@@ -1,70 +1,58 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>ViCosmuz</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #0d1117;
-            color: #e6edf3;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #161b22;
-            padding: 1rem;
-            border-bottom: 1px solid #30363d;
-        }
-        header a {
-            color: #58a6ff;
-            text-decoration: none;
-            margin-right: 1rem;
-        }
-        main {
-            padding: 2rem;
-        }
-        a {
-            color: #58a6ff;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        ul { list-style: none; padding-left: 0; }
-        li { margin: 0.3rem 0; }
-        .card {
-            background-color: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 10px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-        .image {
-            width: 100%;
-            max-width: 400px;
-            border-radius: 8px;
-        }
-        footer {
-            border-top: 1px solid #30363d;
-            text-align: center;
-            padding: 1rem;
-            color: #8b949e;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>ViCosmuz</title>
+  <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <style>
+    body {
+      transition: background 0.8s ease;
+      background: radial-gradient(circle at 20% 20%, #0a0f24, #000);
+      color: #f8f9fa;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-space {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1.2rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+      transition: all 0.4s ease;
+    }
+
+    .fadeIn {
+      animation: fadeIn 0.5s ease forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    footer {
+      margin-top: auto;
+      text-align: center;
+      color: #bbb;
+      padding: 1rem;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <a href="{% url 'home' %}">🏠 Home</a>
-        <a href="{% url 'celestialBodyCreation' %}">➕ Adicionar Corpo Celeste</a>
 
-    </header>
-    <main>
-        {% block content %}
-    </main>
-    <footer>
-        <p>🌌 ViCosmuz — A Database Espacial de Muzambinho.</p>
-    </footer>
+  {% block content %}
+  {% endblock %}
+
+  <footer>
+    &copy; 2025 ViCosmuz. Todos os direitos reservados.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  {% block scripts %}
+  {% endblock %}
 </body>
 </html>
-{% endblock %}
