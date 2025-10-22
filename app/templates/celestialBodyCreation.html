@@ -10,8 +10,10 @@
       {% csrf_token %}
 
       <div class="form-group mb-4 text-center">
-        <label for="objectType" class="form-label fw-semibold d-block mb-3 fs-5">🌠 Escolha o tipo de corpo celeste</label>
-        <select id="objectType" name="objectType" class="form-select mx-auto w-50 text-center">
+        <label for="objectType" class="form-label fw-semibold d-block mb-3 fs-5">
+          🌠 Escolha o tipo de corpo celeste
+        </label>
+        <select id="objectType" name="objectType" class="form-select mx-auto w-50 text-center" required>
           <option value="">Selecione...</option>
           <option value="galaxy" {% if selectedType == 'galaxy' %}selected{% endif %}>🌌 Galáxia</option>
           <option value="star" {% if selectedType == 'star' %}selected{% endif %}>⭐ Estrela</option>
@@ -28,7 +30,7 @@
       </div>
 
       <div id="starForm" class="bodyForm mt-4" style="display:none;">
-        <h4 class="text-dark">Dados da Estrela</h4>
+        <h4 class="text-warning mb-3">Dados da Estrela</h4>
         {{ starForm.as_p }}
         <div class="text-end mt-3">
           <button type="submit" class="btn btn-warning px-4">Registrar Estrela</button>
@@ -60,19 +62,19 @@
         title: "Criar Galáxia",
         color: "text-info",
         bg: "radial-gradient(circle at top left, #141E30, #243B55)",
-        textColor: "#fff"
+        textColor: "#ffffff"
       },
       star: {
         title: "Criar Estrela",
-        color: "text-dark",
+        color: "text-warning",
         bg: "radial-gradient(circle at top right, #ffb347, #ffcc33)",
-        textColor: "#000"
+        textColor: "#000000"
       },
       planet: {
         title: "Criar Planeta",
-        color: "text-light",
+        color: "text-primary",
         bg: "linear-gradient(120deg, #2193b0, #6dd5ed)",
-        textColor: "#fff"
+        textColor: "#ffffff"
       },
     };
 
@@ -83,14 +85,9 @@
       });
 
       const val = select.value;
-      const defaultBg = "radial-gradient(circle at 20% 20%, #0a0f24, #000)";
-      const defaultTextColor = "#f8f9fa";
-
-      document.body.style.background = defaultBg;
-      document.body.style.color = defaultTextColor;
-      card.style.color = defaultTextColor;
-      card.style.background = "rgba(255,255,255,0.07)";
-
+      document.body.style.background = "radial-gradient(circle at 20% 20%, #0a0f24, #000)";
+      document.body.style.color = "#f8f9fa";
+      card.style.color = "#f8f9fa";
       titleEl.textContent = "Criar Corpo Celeste";
       titleEl.className = "text-center mb-4 fw-bold text-light";
 
@@ -102,10 +99,6 @@
         document.body.style.color = textColor;
         card.style.color = textColor;
 
-        if (val === "star") card.style.background = "rgba(255,255,200,0.15)";
-        if (val === "planet") card.style.background = "rgba(200,255,255,0.1)";
-        if (val === "galaxy") card.style.background = "rgba(100,150,255,0.08)";
-
         const form = document.getElementById(val + "Form");
         if (form) {
           form.style.display = "block";
@@ -113,6 +106,10 @@
         }
       }
     }
+
+    document.getElementById("celestialBodyForm").addEventListener("submit", function() {
+      console.log("Submitting objectType:", select.value);
+    });
 
     updateUI();
     select.addEventListener("change", updateUI);

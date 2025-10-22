@@ -1,17 +1,135 @@
 {% extends "base.html" %}
+{% block title %}ViCosmuz — O Universo em Suas Mãos{% endblock %}
 {% block content %}
-<h1>🌠 Bem-vindo ao Cosmuz.</h1>
 
-<h2>Galáxias</h2>
-{% for galaxy in galaxies %}
-<div class="card">
-    <h3><a href="{% url 'galaxy_detail' galaxy.id %}">{{ galaxy.name }}</a></h3>
-    <p>Tipo: {{ galaxy.type }}</p>
-    <p>Distância: {{ galaxy.distanceMly }} anos-luz</p>
-    {% if galaxy.image %}
-        <img class="image" src="{{ galaxy.image.url }}" alt="{{ galaxy.name }}">
-    {% endif %}
+<style>
+  body {
+    background: radial-gradient(ellipse at bottom, #0b0d17 0%, #000000 100%);
+    color: #f0f4ff;
+    font-family: "Poppins", sans-serif;
+    overflow-x: hidden;
+  }
+
+  .stars {
+    background: url("https://www.transparenttextures.com/patterns/stardust.png");
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.2;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 80px 20px 50px;
+  }
+
+  .hero h1 {
+    font-size: 3rem;
+    font-weight: 600;
+    background: linear-gradient(90deg, #8ab4f8, #c084fc, #60a5fa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero p {
+    color: #a3bffa;
+    font-size: 1.2rem;
+    margin-top: 10px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 25px;
+    margin: 60px auto;
+    max-width: 1000px;
+    padding: 0 20px;
+  }
+
+  .card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 30px 25px;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 0 30px rgba(96, 165, 250, 0.3);
+  }
+
+  .card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #93c5fd;
+  }
+
+  .card p {
+    font-size: 0.95rem;
+    color: #cbd5e1;
+  }
+
+  .card a {
+    display: inline-block;
+    margin-top: 15px;
+    background: linear-gradient(90deg, #3b82f6, #9333ea);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .card a:hover {
+    background: linear-gradient(90deg, #60a5fa, #a855f7);
+  }
+
+  footer {
+    text-align: center;
+    padding: 20px;
+    color: #6b7280;
+    font-size: 0.9rem;
+  }
+</style>
+
+<div class="stars"></div>
+
+<div class="hero">
+  <h1>🌌 Bem-vindo ao ViCosmuz</h1>
+  <p>Explore, descubra e catalogue os corpos celestes do nosso universo digital.</p>
 </div>
-{% empty %}
-{% endfor %}
+
+<div class="grid">
+  <div class="card">
+    <h3>🌠 Galáxias</h3>
+    <p>Explore as galáxias registradas no sistema e conheça suas características.</p>
+    <a href="{% url 'galaxy' %}">Ver Galáxias</a>
+  </div>
+
+  <div class="card">
+    <h3>☀️ Estrelas</h3>
+    <p>Descubra as estrelas catalogadas pelos astrônomos da comunidade.</p>
+    <a href="{% url 'stars' %}">Ver Estrelas</a>
+  </div>
+
+  <div class="card">
+    <h3>🪐 Planetas</h3>
+    <p>Conheça os mundos distantes e suas propriedades únicas.</p>
+    <a href="{% url 'planets' %}">Ver Planetas</a>
+  </div>
+
+  <div class="card">
+    <h3>🧭 Criar Corpo Celeste</h3>
+    <p>Adicione novas descobertas e expanda o universo ViCosmuz.</p>
+    <a href="{% url 'celestialBodyCreation' %}">Criar</a>
+  </div>
+</div>
+
+<footer>
+  © 2025 ViCosmuz. Todos os direitos reservados.
+</footer>
+
 {% endblock %}

@@ -21,11 +21,12 @@ class CelestialBodyForm(forms.ModelForm):
         ('asteroid', 'Asteroid'),
         ('comet', 'Comet'),
     ]
+    widgets = { 'description': forms.Textarea(attrs={'rows':3})   }
     name = forms.CharField(max_length=255, label='Name')
     type = forms.ChoiceField(choices=CHOICES, widget=forms.Select(choices=CHOICES), label='Body Type')
     mass = forms.FloatField(label='Mass')
     description = forms.CharField(widget=forms.Textarea, label='Description')
-    discoveryDate = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}), label='Discovery Date')
+    discoveryDate = forms.DateField(label='Discovery Date', widget=forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'), input_formats=['%Y-%m-%d', '%d/%m/%Y'])
     discoveredBy = forms.CharField(max_length=255, label='Discovered By')
     image = forms.ImageField(label='Image', required=False)
 
@@ -47,23 +48,25 @@ class CelestialBodyForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'rows': 3}),  
         }
 
-class GalaxyForm(forms.ModelForm):
+class GalaxyForm(CelestialBodyForm):
     class Meta:
         model = Galaxy
         fields = '__all__'
+        exclude = ['type']
 
 class StarForm(forms.ModelForm):
     class Meta:
         model = Star
         fields = '__all__'
-        exclude = ['content_type', 'object_id']
+        exclude = ['content_type', 'object_id', 'type']
 
-class PlanetForm(forms.ModelForm):
+class PlanetForm(CelestialBodyForm):
     class Meta:
         model = Planet
         fields = '__all__'
+        exclude = ['type']
 
-class CelestialBodyTypeForm(forms.Form):
+class CelestialBodyTypeForm(CelestialBodyForm):
     TYPES = [
         ('galaxy', 'Galaxy'),
         ('star', 'Star'),

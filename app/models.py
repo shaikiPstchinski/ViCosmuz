@@ -63,7 +63,11 @@ class CelestialBody(models.Model):
         abstract = True
 
 class Galaxy(CelestialBody):
-    type = models.CharField(max_length=255, verbose_name="Galaxy's type", choices=[('spiral', 'Spiral'), ('elliptical', 'Elliptical'), ('irregular', 'Irregular')])
+    TYPES=[('spiral', 'Spiral'), 
+             ('elliptical', 'Elliptical'), 
+             ('irregular', 'Irregular')]
+
+    type = models.CharField(max_length=255, verbose_name="Galaxy's type", choices=TYPES, default='spiral')
     distanceMly = models.FloatField(verbose_name='Distance in millions light-years')
     image = models.ImageField(upload_to='galaxyImages/', null=True, blank=True, verbose_name="Galaxy's image")
 
