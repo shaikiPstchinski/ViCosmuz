@@ -1,4 +1,6 @@
 from pathlib import Path
+import dj_database_url
+from dotenv import load_dotenv
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -54,16 +56,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ViCosmuz.wsgi.application'
 
+load_dotenv()
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'vicosmuz',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost',
-        'PORT': '5432',
-        'DISABLE_SERVER_SIDE_CURSORS': True,
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASEURL'),
+        conn_max_age=600,  
+        ssl_require=True,  
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [

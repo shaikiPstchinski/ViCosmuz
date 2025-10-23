@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block title %}ViCosmuz — O Universo em Suas Mãos{% endblock %}
+{% block title %}ViCosmuz — A Database do Universo localizada em Muzambinho{% endblock %}
+{% load static %}
 {% block content %}
 
 <style>
@@ -28,7 +29,7 @@
     font-size: 3rem;
     font-weight: 600;
     background: linear-gradient(90deg, #8ab4f8, #c084fc, #60a5fa);
-    -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
@@ -94,9 +95,33 @@
     font-size: 0.9rem;
   }
 </style>
+<head>
+  <link rel="stylesheet" href="{% static 'image/favicon.png' %}">
+</head>
+<body>
+</body>
+<nav>
+    <div class="nav-left">
+        <img src="{% static 'image/logo.png' %}" alt="ViCosmuz Logo">
+        <h1>ViCosmuz</h1>
+    </div>
 
-<div class="stars"></div>
+<!-- Lembrar de consertar os links aqui -->
+    <div class="nav-links">
+        <a href="{% url 'home' %}">Início</a>
+        <a href="{% url 'home' %}">Galáxias</a>
+        <a href="{% url 'home' %}">Estrelas</a>
+        <a href="{% url 'home' %}">Planetas</a>
+        <a href="{% url 'createCelestialBody' %}">Criar</a>
 
+        {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}">Sair</a>
+        {% else %}
+            <a href="{% url 'login' %}">Entrar</a>
+            <a href="{% url 'register' %}">Cadastrar</a>
+        {% endif %}
+    </div>
+</nav>
 <div class="hero">
   <h1>🌌 Bem-vindo ao ViCosmuz</h1>
   <p>Explore, descubra e catalogue os corpos celestes do nosso universo digital.</p>
@@ -106,27 +131,26 @@
   <div class="card">
     <h3>🌠 Galáxias</h3>
     <p>Explore as galáxias registradas no sistema e conheça suas características.</p>
-    <a href="{% url 'galaxy' %}">Ver Galáxias</a>
   </div>
 
   <div class="card">
     <h3>☀️ Estrelas</h3>
     <p>Descubra as estrelas catalogadas pelos astrônomos da comunidade.</p>
-    <a href="{% url 'stars' %}">Ver Estrelas</a>
   </div>
 
   <div class="card">
     <h3>🪐 Planetas</h3>
     <p>Conheça os mundos distantes e suas propriedades únicas.</p>
-    <a href="{% url 'planets' %}">Ver Planetas</a>
   </div>
 
   <div class="card">
     <h3>🧭 Criar Corpo Celeste</h3>
     <p>Adicione novas descobertas e expanda o universo ViCosmuz.</p>
-    <a href="{% url 'celestialBodyCreation' %}">Criar</a>
+    <a href="{% url 'createCelestialBody' %}">Criar</a>
   </div>
-</div>
+  </div>
+
+</body>
 
 <footer>
   © 2025 ViCosmuz. Todos os direitos reservados.

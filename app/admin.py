@@ -8,8 +8,8 @@ def markAsVerified(self, request, queryset):
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'type', 'is_staff', 'is_active', 'is_superuser')
-    list_filter = ('type', 'is_staff', 'is_active', 'is_superuser')
+    list_display = ('username', 'email', 'is_staff', 'is_active', 'is_superuser')
+    list_filter = ('is_staff', 'is_active', 'is_superuser')
     search_fields = ('username', 'email')
     ordering = ('username',)
     actions = ['markAsVerified']
@@ -25,7 +25,7 @@ class CustomUserAdmin(admin.ModelAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'email', 'password1', 'password2', 'type', 'verified', 'is_staff', 'is_active'),
+            'fields': ('username', 'email', 'password1', 'password2', 'verified', 'is_staff', 'is_active'),
         }),
     )
 
@@ -40,7 +40,7 @@ class GalaxyAdmin(admin.ModelAdmin):
     
 @admin.register(Star)
 class StarAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type', 'galaxy', 'temperature', 'luminosity')
+    list_display = ('name', 'galaxy', 'temperature', 'luminosity')
 
 @admin.register(Planet)
 class PlanetAdmin(admin.ModelAdmin):

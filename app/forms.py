@@ -52,19 +52,20 @@ class GalaxyForm(CelestialBodyForm):
     class Meta:
         model = Galaxy
         fields = '__all__'
-        exclude = ['type']
+        exclude = ['verified']
 
 class StarForm(forms.ModelForm):
+    print("✅ StarForm loaded!") 
     class Meta:
         model = Star
         fields = '__all__'
-        exclude = ['content_type', 'object_id', 'type']
+        exclude = ['contentType', 'objectId', 'verified']
 
 class PlanetForm(CelestialBodyForm):
     class Meta:
         model = Planet
         fields = '__all__'
-        exclude = ['type']
+        exclude = ['type', 'verified']
 
 class CelestialBodyTypeForm(CelestialBodyForm):
     TYPES = [

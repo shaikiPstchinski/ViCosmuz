@@ -1,13 +1,13 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import logout
 from .forms import *
-from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.models import Group
 from django.contrib import messages
 from .models import Galaxy, Star, Planet
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .decorators import astronomerRequired
 import random
+import requests
 
 def randomGalaxy():
     ids = list(Galaxy.objects.values_list('id', flat=True))
@@ -18,7 +18,7 @@ def randomGalaxy():
     while randomId not in ids:
         randomId = random.randint(1, 9)
 
-    return render(request, 'GalaxyDetail.html', {'galaxy': get_object_or_404(Galaxy, id=randomId)})
+    return render(requests, 'GalaxyDetail.html', {'galaxy': get_object_or_404(Galaxy, id=randomId)})
 
 def randomStar():
     ids = list(Galaxy.objects.values_list('id', flat=True))
@@ -29,7 +29,7 @@ def randomStar():
     while randomId not in ids:
         randomId = random.randint(1, 9)
 
-    return render(request, 'StarDetail.html', {'star': get_object_or_404(Star, id=randomId)})
+    return render(requests, 'StarDetail.html', {'star': get_object_or_404(Star, id=randomId)})
 
 def randomPlanet():
     ids = list(Planet.objects.values_list('id', flat=True))
@@ -41,6 +41,8 @@ def randomPlanet():
     return redirect('starDetail', star_id=randomId)
 
 def isAstronomer(user):
+    pass
+
 def random_galaxy(request):
     ids = list(Galaxy.objects.values_list('id', flat=True))
     if not ids:
@@ -48,28 +50,27 @@ def random_galaxy(request):
     random_id = random.choice(ids)
     return redirect('galaxy_detail', pk=random_id)
 
-def random_star(request):
+def random_star(requests):
     ids = list(Star.objects.values_list('id', flat=True))
     if not ids:
         return redirect('stars')
     random_id = random.choice(ids)
     return redirect('star_detail', pk=random_id)
 
-def random_planet(request):
+def random_planet(requests):
     ids = list(Planet.objects.values_list('id', flat=True))
     if not ids:
         return redirect('planets')
     random_id = random.choice(ids)
     return redirect('planet_detail', pk=random_id)
 
-
-def galaxyList(request):
+def galaxyList(requests):
     galaxies = Galaxy.objects.all()
-    return render(request, 'galaxyList.html', {'galaxies':galaxies})
+    return render(requestss, 'galaxyList.html', {'galaxies':galaxies})
 
-def search(request):
-    query = request.GET.get('q', '')
-    selectedType = request.GET.get('type', '')
+def search(requests):
+    query = requests.GET.get('q', '')
+    selectedType = requests.GET.get('type', '')
     galaxies = [] 
     stars = [] 
     planets = [] 
@@ -82,9 +83,9 @@ def search(request):
         planets = Planet.objects.filter(name__icontains=query)
         results = True
         context = {'query': query, 'galaxies': galaxies, 'stars': stars, 'planets': planets}
-        return render(request, 'search.html', context)
+        return render(requests, 'search.html', context)
 
-    return render(request, 'search.html', context)
+    return render(requests, 'search.html', context)
 
     if selectedType:
         results = True
@@ -96,12 +97,12 @@ def search(request):
             if name:
                 galaxies = galaxies.filter(name__icontains=name)
             
-            galaxyType = request.GET.get('type', '')
+            galaxyType = requests.GET.get('type', '')
             if objectType:
                 galaxies = galaxies.filter(type=galaxy_type)
 
             
-            distanceMly = request.GET.get('distance_mly', '')
+            distanceMly = requests.GET.get('distance_mly', '')
             if distanceMly:
                 try:
                     galaxies = galaxies.filter(distanceMly__lte=float(distance_mly))
@@ -111,22 +112,22 @@ def search(request):
         elif selectedType == 'star':
             stars = Star.objects.all()
             
-            name = request.GET.get('name', '')
+            name = requests.GET.get('name', '')
             if name:
                 stars = stars.filter(name__icontains=name)
             
-            starType = request.GET.get('type', '')
+            starType = requests.GET.get('type', '')
             if starType:
                 stars = stars.filter(type=starType)
             
-            temperature = request.GET.get('temperature', '')
+            temperature = requests.GET.get('temperature', '')
             if temperature:
                 try:
                     stars = stars.filter(temperature__lte=float(temperature))
                 except ValueError:
                     pass
             
-            luminosity = request.GET.get('luminosity', '')
+            luminosity = requests.GET.get('luminosity', '')
             if luminosity:
                 try:
                     stars = stars.filter(luminosity__lte=float(luminosity))
@@ -136,138 +137,97 @@ def search(request):
         elif selectedType == 'planet':
             planets = Planet.objects.all()
             
-            name = request.GET.get('name', '')
+            name = requests.GET.get('name', '')
             if name:
                 planets = planets.filter(name__icontains=name)
             
-            star = request.GET.get('star', '')
+            star = requests.GET.get('star', '')
             if star:
                 planets = planets.filter(star__name__icontains=star)
 
-            habitable = request.GET.get('habitable', '')
+            habitable = requests.GET.get('habitable', '')
             if habitable == 'yes':
                 planets = planets.filter(habitable=True)
             elif habitable == 'no':
                 planets = planets.filter(habitable=False)
             
-            orbitPeriod = request.GET.get('orbitPeriod', '')
+            orbitPeriod = requests.GET.get('orbitPeriod', '')
             if orbitPeriod:
                 try:
                     planets = planets.filter(orbitalPeriod__lte=float(orbitalPeriod))
                 except ValueError:
                     pass
 
-def home(request):
-    return render(request, 'home.html')
+def home(requests):
+    return render(requests, 'home.html')
 
-def register(request):
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
+def register(requests):
+    if requests.method == 'POST':
+        form = CustomUserCreationForm(requests.POST)
         if form.is_valid():
             user = form.save()
 
             user_group = Group.objects.get(name='User')
             user.groups.add(user_group)
 
-            messages.success(request, 'Usuário cadastrado com sucesso.')
+            messages.success(requests, 'Usuário cadastrado com sucesso.')
             return redirect('login')
         
     else: 
         form = CustomUserCreationForm()
 
-    return render(request, 'register.html', {'form':form})
+    return render(requests, 'register.html', {'form':form})
 
-def galaxyDetail(request, galaxy_id):
+def galaxyDetail(requests, galaxy_id):
     galaxy = get_object_or_404(Galaxy, id=galaxy_id)
     stars = galaxy.stars.all()
 
-    return render(request, 'galaxyDetail.html', {'galaxy': galaxy, 'stars': stars})
+    return render(requests, 'galaxyDetail.html', {'galaxy': galaxy, 'stars': stars})
 
-def starDetail(request, star_id):
+def starDetail(requests, star_id):
     star = get_object_or_404(Star, id=star_id)
     planets = star.planets.all()
 
-    return render(request, 'starDetail.html', {'star': star, 'planets': planets})
+    return render(requests, 'starDetail.html', {'star': star, 'planets': planets})
 
-def planetDetail(request, planet_id):
+def planetDetail(requests, planet_id):
     planet = get_object_or_404(Planet, id=planet_id)
 
-    return render(request, 'planetDetail.html', {'planet': planet})
+    return render(requests, 'planetDetail.html', {'planet': planet})
 
 @astronomerRequired
-def celestialBodyCreation(request):
+def celestialBodyCreation(requests):
     title = "Criar Corpo Celeste"
-    objectType = None 
-    galaxyForm = GalaxyForm()
-    starForm = StarForm()
-    planetForm = PlanetForm()
+    objectType = requests.POST.get('objectType') if requests.method == 'POST' else None 
+    galaxyForm = GalaxyForm(requests.POST or None, requests.FILES or None)
+    starForm = StarForm(requests.POST or None, requests.FILES or None)
+    planetForm = PlanetForm(requests.POST or None, requests.FILES or None)
 
-    if request.method == 'POST':
-        objectType = request.POST.get('objectType')
+    if requests.method == 'POST': 
+        form = None
+        
+        match(objectType):
+            case 'galaxy':
+                form = galaxyForm
+            case 'star':
+                form = starForm
+            case 'planet':
+                form = planetForm
 
-        if objectType == "galaxy":
-            title = "Criar Galáxia"
-            galaxyForm = GalaxyForm(request.POST, request.FILES)
-
-            if galaxyForm.is_valid():
-                galaxy = galaxyForm.save(commit=False)
-                galaxy.discoveredBy = request.user.username
-                galaxy.save()
-                if galaxyForm.is_valid():
-                    galaxy = galaxyForm.save(commit=False)
-                    galaxy.discoveredBy = request.user.username
-                    galaxy.save()
-                    print(f"[✅ DATABASE] Galaxy '{galaxy.name}' saved successfully!")
-
-                messages.success(request, f'Galáxia criada com sucesso: {galaxy.name}.')
-                return redirect('home')
-            else:
-                print("Form error:\n", galaxyForm.errors)
-                print("[❌ INVALID GALAXY FORM]")
-
-        elif objectType == "star":
-            title = "Criar Estrela"
-            starForm = StarForm(request.POST, request.FILES)
-
-            if starForm.is_valid():
-                star = starForm.save(commit=False)
-                star.discoveredBy = request.user.username
-                star.save()
-                messages.success(request, f'Estrela criada com sucesso: {star.name}.')
-                return redirect('home')
-            else:
-                print("Form error:\n", starForm.errors)
-
-        elif objectType == "planet":
-            title = "Criar Planeta"
-            planetForm = PlanetForm(request.POST, request.FILES)
-
-            if planetForm.is_valid():
-                planet = planetForm.save(commit=False)
-                planet.discoveredBy = request.user.username
-                planet.save()
-                messages.success(request, f'Planeta criado com sucesso: {planet.name}.')
-                return redirect('home')
-            else:
-                print("Form error:\n", planetForm.errors)
+        if form and form.is_valid():
+            obj = form.save(commit=False)
+            obj.save()
+            messages.success(requests, f"{selectedType.capitalize()} '{obj.name}' criada com sucesso!")
         else:
-            messages.error(request, 'Tipo de corpo celeste inválido.')
-            print("Object type error:\n", objectType)
+            messages.error(requests, "Erro ao criar o corpo celeste. Verifique os campos e tente novamente.")
+            print(form.errors if form else "❌ Nenhum formulário selecionado.")
+            
+        selectedType = requests.POST.get("objectType") if requests.method == "POST" else None
 
-    print("=== Celestial Body Creation Debug ===")
-    print("Request method:", request.method)
-    print("POST content:", request.POST)
-    print("Selected type:", objectType)
-    print("Galaxy form valid:", galaxyForm.is_valid())
-    print("Star form valid:", starForm.is_valid())
-    print("Planet form valid:", planetForm.is_valid())
-
-    context = {
-        'title': title,
-        'objectType': objectType,
-        'galaxyForm': galaxyForm,
-        'starForm': starForm,
-        'planetForm': planetForm,
-        }
-
-    return render(request, 'celestialBodyCreation.html', context)
+    return render(requests, "celestialBodyCreation.html", {
+        "title": title,
+        "galaxyForm": galaxyForm,
+        "starForm": starForm,
+        "planetForm": planetForm,
+        "selectedType": selectedType,
+    })

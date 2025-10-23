@@ -1,19 +1,143 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block title %}Criar Corpo Celeste — ViCosmuz{% endblock %}
+
 {% block content %}
-<div class="container py-5">
-  <div class="card card-space p-5 shadow-lg mx-auto fadeIn" style="max-width: 800px;">
-    <h2 id="pageTitle" class="text-center mb-4 fw-bold">{{ title }}</h2>
+<style>
+  body {
+    background: radial-gradient(ellipse at bottom, #0b0d17 0%, #000000 100%);
+    color: #f0f4ff;
+    font-family: "Poppins", sans-serif;
+  }
+
+  .container {
+    padding: 80px 20px;
+    text-align: center;
+  }
+
+  .card-space {
+    background: rgba(255,255,255,0.05);
+    border-radius: 20px;
+    padding: 50px 40px;
+    box-shadow: 0 0 25px rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+
+  .card-space:hover {
+    box-shadow: 0 0 35px rgba(96,165,250,0.3);
+  }
+
+  .form-select, input[type="text"], input[type="number"], input[type="date"], textarea {
+    background: rgba(255,255,255,0.07);
+    color: #f0f4ff;
+    border: 1px solid rgba(96,165,250,0.4);
+    border-radius: 10px;
+    padding: 10px 12px;
+    width: 100%;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+  }
+
+  input:focus, textarea:focus, .form-select:focus {
+    outline: none;
+    border-color: #60a5fa;
+    box-shadow: 0 0 12px #3b82f6;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    text-align: left;
+  }
+
+  .fadeIn {
+    animation: fadeIn 0.5s ease forwards;
+  }
+
+  @keyframes fadeIn {
+    from {opacity:0; transform:translateY(10px);}
+    to {opacity:1; transform:translateY(0);}
+  }
+
+  .btn-galaxy, .btn-star, .btn-planet {
+    display: inline-block;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 28px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+  }
+
+  .btn-galaxy {
+    background: linear-gradient(90deg, #3b82f6, #9333ea);
+    color: #fff;
+  }
+
+  .btn-star {
+    background: linear-gradient(90deg, #ffb347, #ffcc33);
+    color: #111;
+  }
+
+  .btn-star:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(255, 215, 100, 0.25);
+  }
+
+  #starForm,
+  #starForm label,
+  #starForm h4,
+  #starForm input,
+  #starForm textarea,
+  #starForm select,
+  #starForm p {
+    color: #111 !important;
+  }
+
+  #starForm input,
+  #starForm textarea,
+  #starForm select {
+    background: rgba(255,255,255,0.9);
+    border: 1px solid #f6ad55;
+  }
+
+  #starForm input::placeholder,
+  #starForm textarea::placeholder {
+    color: #555;
+  }
+
+  .btn-planet {
+    background: linear-gradient(90deg, #2193b0, #6dd5ed);
+    color: #fff;
+  }
+
+  .btn-galaxy:hover, .btn-planet:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(255,255,255,0.3);
+  }
+
+  .form-header {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+</style>
+
+<div class="container">
+  <div class="card-space mx-auto" style="max-width: 800px;">
+    <h2 id="pageTitle" class="mb-4 fw-bold">Criar Corpo Celeste</h2>
 
     <form method="POST" enctype="multipart/form-data" id="celestialBodyForm">
       {% csrf_token %}
 
-      <div class="form-group mb-4 text-center">
-        <label for="objectType" class="form-label fw-semibold d-block mb-3 fs-5">
-          🌠 Escolha o tipo de corpo celeste
-        </label>
-        <select id="objectType" name="objectType" class="form-select mx-auto w-50 text-center" required>
+      <div class="mb-4">
+        <label for="objectType" class="fw-semibold mb-2">🌠 Escolha o tipo de corpo celeste</label>
+        <select id="objectType" name="objectType" class="form-select mx-auto w-50" required>
           <option value="">Selecione...</option>
           <option value="galaxy" {% if selectedType == 'galaxy' %}selected{% endif %}>🌌 Galáxia</option>
           <option value="star" {% if selectedType == 'star' %}selected{% endif %}>⭐ Estrela</option>
@@ -21,28 +145,22 @@
         </select>
       </div>
 
-      <div id="galaxyForm" class="bodyForm mt-4" style="display:none;">
-        <h4 class="text-info mb-3">Dados da Galáxia</h4>
+      <div id="galaxyForm" class="bodyForm" style="display:none;">
+        <h4 class="form-header text-info">Dados da Galáxia</h4>
         {{ galaxyForm.as_p }}
-        <div class="text-end mt-3">
-          <button type="submit" class="btn btn-success px-4">Registrar Galáxia</button>
-        </div>
+        <button type="submit" class="btn-galaxy">Registrar Galáxia</button>
       </div>
 
-      <div id="starForm" class="bodyForm mt-4" style="display:none;">
-        <h4 class="text-warning mb-3">Dados da Estrela</h4>
+      <div id="starForm" class="bodyForm" style="display:none;">
+        <h4 class="form-header" style="color:#111;">Dados da Estrela</h4>
         {{ starForm.as_p }}
-        <div class="text-end mt-3">
-          <button type="submit" class="btn btn-warning px-4">Registrar Estrela</button>
-        </div>
+        <button type="submit" class="btn-star">Registrar Estrela</button>
       </div>
 
-      <div id="planetForm" class="bodyForm mt-4" style="display:none;">
-        <h4 class="text-primary mb-3">Dados do Planeta</h4>
+      <div id="planetForm" class="bodyForm" style="display:none;">
+        <h4 class="form-header text-primary">Dados do Planeta</h4>
         {{ planetForm.as_p }}
-        <div class="text-end mt-3">
-          <button type="submit" class="btn btn-primary px-4">Registrar Planeta</button>
-        </div>
+        <button type="submit" class="btn-planet">Registrar Planeta</button>
       </div>
     </form>
   </div>
@@ -51,68 +169,57 @@
 
 {% block scripts %}
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const select = document.getElementById("objectType");
-    const forms = document.querySelectorAll(".bodyForm");
-    const titleEl = document.getElementById("pageTitle");
-    const card = document.querySelector(".card-space");
+document.addEventListener("DOMContentLoaded", () => {
+  const select = document.getElementById("objectType");
+  const title = document.getElementById("pageTitle");
 
-    const themes = {
-      galaxy: {
-        title: "Criar Galáxia",
-        color: "text-info",
-        bg: "radial-gradient(circle at top left, #141E30, #243B55)",
-        textColor: "#ffffff"
-      },
-      star: {
-        title: "Criar Estrela",
-        color: "text-warning",
-        bg: "radial-gradient(circle at top right, #ffb347, #ffcc33)",
-        textColor: "#000000"
-      },
-      planet: {
-        title: "Criar Planeta",
-        color: "text-primary",
-        bg: "linear-gradient(120deg, #2193b0, #6dd5ed)",
-        textColor: "#ffffff"
-      },
-    };
+  if (!select || !title) {
+    console.warn("⚠️ ViCosmuz: Missing select or title element, script aborted.");
+    return;
+  }
 
-    function updateUI() {
-      forms.forEach(f => {
-        f.style.display = "none";
-        f.classList.remove("fadeIn");
-      });
+  const forms = {
+    galaxy: document.getElementById("galaxyForm"),
+    star: document.getElementById("starForm"),
+    planet: document.getElementById("planetForm"),
+  };
 
-      const val = select.value;
-      document.body.style.background = "radial-gradient(circle at 20% 20%, #0a0f24, #000)";
-      document.body.style.color = "#f8f9fa";
-      card.style.color = "#f8f9fa";
-      titleEl.textContent = "Criar Corpo Celeste";
-      titleEl.className = "text-center mb-4 fw-bold text-light";
+  const themes = {
+    galaxy: { title: "Criar Galáxia", bg: "radial-gradient(circle at top left, #0b0d17, #1e1e2f)" },
+    star: { title: "Criar Estrela", bg: "radial-gradient(circle at top right, #ffb347, #ffcc33)" },
+    planet: { title: "Criar Planeta", bg: "linear-gradient(120deg, #2193b0, #6dd5ed)" },
+  };
 
-      if (val && themes[val]) {
-        const { title, color, bg, textColor } = themes[val];
-        titleEl.textContent = title;
-        titleEl.className = "text-center mb-4 fw-bold " + color;
-        document.body.style.background = bg;
-        document.body.style.color = textColor;
-        card.style.color = textColor;
-
-        const form = document.getElementById(val + "Form");
-        if (form) {
-          form.style.display = "block";
-          form.classList.add("fadeIn");
-        }
-      }
-    }
-
-    document.getElementById("celestialBodyForm").addEventListener("submit", function() {
-      console.log("Submitting objectType:", select.value);
+  function showForm(type) {
+    // Hide all forms
+    Object.values(forms).forEach(f => {
+      if (f) f.style.display = "none";
     });
 
-    updateUI();
-    select.addEventListener("change", updateUI);
-  });
+    if (type && forms[type]) {
+      const theme = themes[type];
+      document.body.style.background = theme.bg || "#0b0d17";
+      title.textContent = theme.title;
+      title.style.color = type === "star" ? "#111" : "#f0f4ff";
+
+      forms[type].style.display = "block";
+      forms[type].classList.add("fadeIn");
+    } else {
+      document.body.style.background =
+        "radial-gradient(ellipse at bottom, #0b0d17 0%, #000000 100%)";
+      title.textContent = "Criar Corpo Celeste";
+      title.style.color = "#f0f4ff";
+    }
+  }
+
+  // Event listeners
+  select.addEventListener("change", e => showForm(e.target.value));
+
+  // Initialize state after DOM is ready
+  setTimeout(() => {
+    showForm(select.value);
+  }, 0);
+});
 </script>
 {% endblock %}
+

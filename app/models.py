@@ -28,6 +28,8 @@ class CustomUser(AbstractUser):
     
     class Meta:
         db_table = 'customUser'  
+        verbose_name = "CustomUser"
+        verbose_name_plural = "CustomUsers" 
 
 class CelestialBody(models.Model):
     TYPES = [
@@ -44,7 +46,6 @@ class CelestialBody(models.Model):
     ]
     
     name = models.CharField(max_length=255, unique=True, verbose_name="Celestial body's name")
-    type = models.CharField(max_length=255, choices=TYPES, verbose_name="Celestial body's type")
     mass = models.DecimalField(max_digits=18, decimal_places=6, verbose_name="Body's mass", null=True, blank=True)
     radius = models.DecimalField(max_digits=18, decimal_places=6, verbose_name="Body's radius", null=True, blank=True)
     description = models.TextField(verbose_name="Celestial body's description", blank=True)
@@ -63,22 +64,35 @@ class CelestialBody(models.Model):
         abstract = True
 
 class Galaxy(CelestialBody):
-    TYPES=[('spiral', 'Spiral'), 
+    TYPES = [('spiral', 'Spiral'), 
              ('elliptical', 'Elliptical'), 
              ('irregular', 'Irregular')]
 
-    type = models.CharField(max_length=255, verbose_name="Galaxy's type", choices=TYPES, default='spiral')
+    galaxyType = models.CharField(max_length=255, verbose_name="Galaxy's type", choices=TYPES, default='spiral')
     distanceMly = models.FloatField(verbose_name='Distance in millions light-years')
     image = models.ImageField(upload_to='galaxyImages/', null=True, blank=True, verbose_name="Galaxy's image")
 
+    class Meta:
+        verbose_name = "Galaxy"
+        verbose_name_plural = "Galaxies"
+
 class Star(CelestialBody):
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    galaxy = GenericForeignKey('content_type', 'object_id')
-    type = models.CharField(max_length=255, verbose_name="Star's type", choices=[('main_sequence', 'Main Sequence'), ('giant', 'Giant'), ('dwarf', 'Dwarf'), ('supergiant', 'Supergiant')])
+    TYPES = [
+        ('main sequence', 'Main Sequence'),
+        ('giant', 'Giant'),
+        ('dwarf', 'Dwarf'),
+        ('supergiant', 'Supergiant'),
+    ]
+
+    galaxy = models.ForeignKey('Galaxy', on_delete=models.CASCADE, related_name='stars', verbose_name="star's Galaxy", null=True, blank=True)
+    starType = models.CharField(max_length=255, verbose_name="Star's type", choices=TYPES, default='main sequence')
     temperature = models.FloatField(null=True, blank=True, verbose_name="Star's surface temperature")
     luminosity = models.FloatField(null=True, blank=True, verbose_name="Star's luminosity")
     image = models.ImageField(upload_to='starImages/', null=True, blank=True, verbose_name="Star's image")
+
+    class Meta:
+        verbose_name = "Star"
+        verbose_name_plural = "Stars" 
     
 class Planet(CelestialBody):
     star = models.ForeignKey(Star, on_delete=models.CASCADE, related_name="planets")
@@ -86,4 +100,7 @@ class Planet(CelestialBody):
     orbitPeriod = models.FloatField(null=True, blank=True, verbose_name="Orbital period in earth years")
     image = models.ImageField(upload_to='planetImages/', null=True, blank=True, verbose_name="Planet's image")
 
+    class Meta:
+        verbose_name = "Planet"
+        verbose_name_plural = "Planets"
 

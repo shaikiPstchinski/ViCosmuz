@@ -6,10 +6,10 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('register/', views.register, name='register'),
     path('search/', views.search, name='search'),
-    path('galaxy/<int:galaxyId>/', views.galaxyDetail, name='galaxyDetail'),
-    path('celestialBodyCreation/', views.celestialBodyCreation, name='celestialBodyCreation'),
-    path('star/<int:starId>/', views.starDetail, name='starDetail'),
-    path('planet/<int:planetId>/', views.planetDetail, name='planetDetail'),
     path('create/', views.celestialBodyCreation, name='createCelestialBody'),
+    path('galaxy/<int:galaxyId>/', views.galaxyDetail, name='galaxyDetail'),
+    path('random/galaxy/', views.randomGalaxy, name='galaxy'),
+    path('star/<int:starId>/', views.starDetail, name='star'),
+    path('planet/<int:planetId>/', views.planetDetail, name='planet'),
 ]
 
